@@ -1,0 +1,38 @@
+name: Decompile and Rebuild APK
+
+on:
+  repository_dispatch:
+    types: [mod_apk_command]
+
+jobs:
+  process-apk:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java & Android SDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Install APKTool
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y apktool
+
+      - name: Decompile APK
+        run: |
+          apktool d app-original.apk -o apk_decompiled -f
+
+      - name: Rebuild APK
+        run: |
+          apktool b apk_decompiled -o app-modified-unsigned.apk
+
+      - name: Upload Modified APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: modified-apk
+          path: app-modified-unsigned.apk
+          
