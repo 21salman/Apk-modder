@@ -24,7 +24,7 @@ jobs:
 
       - name: Decompile APK
         run: |
-          apktool d app-original.apk -o apk_decompiled -f
+          apktool d Apk.apk -o apk_decompiled -f
 
       - name: Rebuild APK
         run: |
@@ -35,4 +35,3 @@ jobs:
         with:
           name: modified-apk
           path: app-modified-unsigned.apk
-          
